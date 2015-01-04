@@ -3,6 +3,7 @@ from io import BytesIO
 from tarfile import TarInfo, TarFile
 
 from django.apps.registry import apps
+from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import models
@@ -46,22 +47,19 @@ class Command(BaseCommand):
         """
 
         # Create the archive that the contents will be added to
-        tar = TarFile.open(datetime.today().strftime('%Y-%m-%d-%H-%M-%S.tar.bz2'), 'w:bz2')
+        filename = getattr(settings, 'ARCHIVE_FILENAME', '%Y-%m-%d-%H-%M-%S.tar.bz2')
+        tar = TarFile.open(datetime.today().strftime(filename), 'w:bz2')
+
+        # Determine the list of models to exclude
+        exclude = getattr(settings, 'ARCHIVE_EXCLUDE', (
+            'auth.Permission',
+            'contenttypes.ContentType',
+            'sessions.Session',
+        ))
 
         # Dump the tables to a MixedIO
         data = MixedIO()
-        call_command(
-            'dumpdata',
-            all=True,
-            format='json',
-            indent=4,
-            exclude=[
-                'contenttypes.ContentType',
-                'sessions.Session',
-                'auth.Permission',
-            ],
-            stdout=data,
-        )
+        call_command('dumpdata', all=True, format='json', indent=4, exclude=exclude, stdout=data)
         info = TarInfo('data.json')
         info.size = data.rewind()
         tar.addfile(info, data)
