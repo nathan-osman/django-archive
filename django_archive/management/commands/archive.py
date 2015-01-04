@@ -50,7 +50,18 @@ class Command(BaseCommand):
 
         # Dump the tables to a MixedIO
         data = MixedIO()
-        call_command('dumpdata', all=True, format='json', indent=4, stdout=data)
+        call_command(
+            'dumpdata',
+            all=True,
+            format='json',
+            indent=4,
+            exclude=[
+                'contenttypes.ContentType',
+                'sessions.Session',
+                'auth.Permission',
+            ],
+            stdout=data,
+        )
         info = TarInfo('data.json')
         info.size = data.rewind()
         tar.addfile(info, data)
