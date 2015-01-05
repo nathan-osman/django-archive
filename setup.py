@@ -15,6 +15,7 @@ setup(
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
+        'Framework :: Django',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
