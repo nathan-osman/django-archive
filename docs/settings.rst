@@ -7,9 +7,20 @@ behavior. These settings are set on a per-project basis in ``settings.py``.
 ``ARCHIVE_FILENAME``
 --------------------
 
-**Default:** ``%Y-%m-%d-%H-%M-%S.tar.bz2``
+**Default:** ``'%Y-%m-%d--%H-%M-%S'``
 
 String passed to ``strftime()`` to determine the filename of the archive.
+
+``ARCHIVE_FORMAT``
+------------------
+
+**Default:** ``'bz2'``
+
+Format used for creating the compressed archive. The two options currently
+available include:
+
+- ``'bz2'``
+- ``'gz'``
 
 ``ARCHIVE_EXCLUDE``
 -------------------

@@ -47,8 +47,12 @@ class Command(BaseCommand):
         """
 
         # Create the archive that the contents will be added to
-        filename = getattr(settings, 'ARCHIVE_FILENAME', '%Y-%m-%d-%H-%M-%S.tar.bz2')
-        tar = TarFile.open(datetime.today().strftime(filename), 'w:bz2')
+        fmt = getattr(settings, 'ARCHIVE_FORMAT', 'bz2')
+        filename = getattr(settings, 'ARCHIVE_FILENAME', '%Y-%m-%d--%H-%M-%S')
+        tar = TarFile.open(
+            datetime.today().strftime(filename) + '.tar.%s' % fmt,
+            'w:%s' % fmt,
+        )
 
         # Determine the list of models to exclude
         exclude = getattr(settings, 'ARCHIVE_EXCLUDE', (
