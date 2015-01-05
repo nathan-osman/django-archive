@@ -1,8 +1,10 @@
 from distutils.core import setup
 
+from django_archive import __version__
+
 setup(
     name='django_archive',
-    version='0.1.3',
+    version=__version__,
     description='Management command for creating compressed archives of DB tables and uploaded media',
     author='Nathan Osman',
     author_email='nathan@quickmediasolutions.com',
