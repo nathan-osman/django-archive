@@ -20,6 +20,7 @@ setup(
         'Framework :: Django',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
     ],
 )
