@@ -1,5 +1,6 @@
 from datetime import datetime
 from io import BytesIO
+from json import dump
 from os import path
 from tarfile import TarInfo, TarFile
 
@@ -9,6 +10,8 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import models
 from django.utils.encoding import smart_bytes
+
+from ... import __version__
 
 
 class MixedIO(BytesIO):
@@ -49,6 +52,7 @@ class Command(BaseCommand):
         tar = self._create_archive()
         self._dump_db(tar)
         self._dump_files(tar)
+        self._dump_meta(tar)
         self.stdout.write("Backup completed.")
 
     def _create_archive(self):
@@ -77,7 +81,7 @@ class Command(BaseCommand):
 
         # Dump the tables to a MixedIO
         data = MixedIO()
-        call_command('dumpdata', all=True, format='json', indent=4, exclude=exclude, stdout=data)
+        call_command('dumpdata', all=True, format='json', exclude=exclude, stdout=data)
         info = TarInfo('data.json')
         info.size = data.rewind()
         tar.addfile(info, data)
@@ -107,3 +111,13 @@ class Command(BaseCommand):
                             info.size = field.size
                             tar.addfile(info, field)
                             field.close()
+
+    def _dump_meta(self, tar):
+        """
+        Dump metadata to the archive.
+        """
+        data = MixedIO()
+        dump({'version': __version__}, data)
+        info = TarInfo('meta.json')
+        info.size = data.rewind()
+        tar.addfile(info, data)
