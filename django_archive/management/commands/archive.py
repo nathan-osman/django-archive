@@ -1,5 +1,6 @@
 from datetime import datetime
 from io import BytesIO
+from os import path
 from tarfile import TarInfo, TarFile
 
 from django.apps.registry import apps
@@ -47,12 +48,13 @@ class Command(BaseCommand):
         """
 
         # Create the archive that the contents will be added to
-        fmt = getattr(settings, 'ARCHIVE_FORMAT', 'bz2')
         filename = getattr(settings, 'ARCHIVE_FILENAME', '%Y-%m-%d--%H-%M-%S')
-        tar = TarFile.open(
-            datetime.today().strftime(filename) + '.tar.%s' % fmt,
-            'w:%s' % fmt,
+        fmt = getattr(settings, 'ARCHIVE_FORMAT', 'bz2')
+        absolute_path = path.join(
+            getattr(settings, 'ARCHIVE_DIRECTORY', ''),
+            '%s.tar.%s' % (datetime.today().strftime(filename), fmt)
         )
+        tar = TarFile.open(absolute_path, 'w:%s' % fmt)
 
         # Determine the list of models to exclude
         exclude = getattr(settings, 'ARCHIVE_EXCLUDE', (

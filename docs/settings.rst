@@ -2,7 +2,16 @@ Settings
 ========
 
 Django Archive provides a number of settings that can be used to customize its
-behavior. These settings are set on a per-project basis in ``settings.py``.
+behavior. These settings are optional, but may be modified on a per-project
+basis in the project's ``settings.py``.
+
+``ARCHIVE_DIRECTORY``
+---------------------
+
+**Default:** *empty*
+
+Directory where the archive will be stored. The default behavior is to create the
+archive in the current directory.
 
 ``ARCHIVE_FILENAME``
 --------------------
