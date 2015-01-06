@@ -1,2 +1,6 @@
 *.py[co]
 __pycache__/
+
+/dist/
+/docs/_build/
+MANIFEST
