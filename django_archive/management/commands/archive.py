@@ -46,15 +46,27 @@ class Command(BaseCommand):
         """
         Process the command.
         """
+        tar = self._create_archive()
+        self._dump_db(tar)
+        self._dump_files(tar)
+        self.stdout.write("Backup completed.")
 
-        # Create the archive that the contents will be added to
+    def _create_archive(self):
+        """
+        Create the archive and return the TarFile.
+        """
         filename = getattr(settings, 'ARCHIVE_FILENAME', '%Y-%m-%d--%H-%M-%S')
         fmt = getattr(settings, 'ARCHIVE_FORMAT', 'bz2')
         absolute_path = path.join(
             getattr(settings, 'ARCHIVE_DIRECTORY', ''),
             '%s.tar.%s' % (datetime.today().strftime(filename), fmt)
         )
-        tar = TarFile.open(absolute_path, 'w:%s' % fmt)
+        return TarFile.open(absolute_path, 'w:%s' % fmt)
+
+    def _dump_db(self, tar):
+        """
+        Dump the rows in each model to the archive.
+        """
 
         # Determine the list of models to exclude
         exclude = getattr(settings, 'ARCHIVE_EXCLUDE', (
@@ -69,6 +81,11 @@ class Command(BaseCommand):
         info = TarInfo('data.json')
         info.size = data.rewind()
         tar.addfile(info, data)
+
+    def _dump_files(self, tar):
+        """
+        Dump all uploaded media to the archive.
+        """
 
         # Loop through all models and find FileFields
         for model in apps.get_models():
@@ -90,6 +107,3 @@ class Command(BaseCommand):
                             info.size = field.size
                             tar.addfile(info, field)
                             field.close()
-
-        # Indicate that the process is complete
-        self.stdout.write("Backup completed.")
