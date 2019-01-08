@@ -49,10 +49,10 @@ class Command(BaseCommand):
         """
         Process the command.
         """
-        tar = self._create_archive()
-        self._dump_db(tar)
-        self._dump_files(tar)
-        self._dump_meta(tar)
+        with self._create_archive() as tar:
+            self._dump_db(tar)
+            self._dump_files(tar)
+            self._dump_meta(tar)
         self.stdout.write("Backup completed.")
 
     def _create_archive(self):
