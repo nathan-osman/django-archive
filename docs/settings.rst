@@ -23,13 +23,16 @@ String passed to ``strftime()`` to determine the filename of the archive.
 ``ARCHIVE_FORMAT``
 ------------------
 
-**Default:** ``'bz2'``
+**Default:** ``django_archive.archivers.TARBALL_BZ2``
 
-Format used for creating the compressed archive. The two options currently
+Format used for creating the compressed archive. The options currently
 available include:
 
-- ``'bz2'``
-- ``'gz'``
+- ``django_archive.archivers.TARBALL``
+- ``django_archive.archivers.TARBALL_GZ``
+- ``django_archive.archivers.TARBALL_BZ2``
+- ``django_archive.archivers.TARBALL_XZ``
+- ``django_archive.archivers.ZIP``
 
 ``ARCHIVE_EXCLUDE``
 -------------------
