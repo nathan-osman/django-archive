@@ -6,7 +6,7 @@ class TarballArchiver:
     Archiver for creating tarballs (compressed and uncompressed)
     """
 
-    UNCOMPRESSED = ''
+    UNCOMPRESSED = 'tar'
     GZ = 'gz'
     BZ2 = 'bz2'
     XZ = 'xz'
