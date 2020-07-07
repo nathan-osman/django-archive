@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Django Archive'
-copyright = u'2015, Nathan Osman'
+copyright = u'2020, Nathan Osman'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
