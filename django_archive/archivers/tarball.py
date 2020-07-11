@@ -16,7 +16,7 @@ class TarballArchiver:
         """
         Determine the correct file extension for the archive
         """
-        return '.tar' if fmt == cls.UNCOMPRESSED else '.tar.{}'.format(fmt)
+        return fmt if fmt == cls.UNCOMPRESSED else 'tar.{}'.format(fmt)
 
     def __init__(self, fileobj, fmt):
         self._fileobj = fileobj

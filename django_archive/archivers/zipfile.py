@@ -12,7 +12,7 @@ class ZipArchiver:
         """
         Determine the correct file extension (always .zip)
         """
-        return '.zip'
+        return 'zip'
 
     # pylint: disable=unused-argument
     def __init__(self, fileobj, fmt):
