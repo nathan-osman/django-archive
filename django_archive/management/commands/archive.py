@@ -12,7 +12,8 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.db import models
+from django.db import connection, models
+from django.db.migrations.recorder import MigrationRecorder
 
 from ... import __version__
 from ...archivers import get_archiver, TARBALL_BZ2
@@ -64,7 +65,11 @@ class Command(BaseCommand):
             dump(
                 {
                     'version': __version__,
-                    'django': get_version(),
+                    'migrations': dict(
+                        MigrationRecorder(connection)
+                        .applied_migrations()
+                        .keys()
+                    ),
                 },
                 fileobj,
                 indent=2,
