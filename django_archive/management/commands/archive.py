@@ -7,6 +7,7 @@ from datetime import datetime
 from json import dump
 from os import path
 
+from django import get_version
 from django.apps import apps
 from django.conf import settings
 from django.core.management import call_command
@@ -63,6 +64,7 @@ class Command(BaseCommand):
             dump(
                 {
                     'version': __version__,
+                    'django': get_version(),
                 },
                 fileobj,
                 indent=2,
