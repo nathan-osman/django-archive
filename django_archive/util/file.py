@@ -4,6 +4,7 @@ Utility class for working with temporary files
 
 import os
 
+from contextlib import contextmanager
 from tempfile import mkstemp
 
 
@@ -21,12 +22,14 @@ class MixedModeTemporaryFile:
     def __exit__(self, exc_type, exc_val, traceback):
         self.close()
 
+    @contextmanager
     def open(self, mode):
         """
         Open the file in the specified mode
         """
+        with os.fdopen(self._fd, mode, closefd=False) as fileobj:
+            yield fileobj
         os.lseek(self._fd, 0, os.SEEK_SET)
-        return os.fdopen(self._fd, mode, closefd=False)
 
     def close(self):
         """
