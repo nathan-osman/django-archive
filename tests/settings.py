@@ -17,5 +17,3 @@ DATABASES = {
         'NAME': ':memory:',
     },
 }
-
-ARCHIVE_DIRECTORY = os.environ['ARCHIVE_DIRECTORY']
