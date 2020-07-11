@@ -7,7 +7,7 @@ from datetime import datetime
 from json import dump
 from os import path
 
-from django.apps.registry import apps
+from django.apps import apps
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -85,19 +85,20 @@ class Command(BaseCommand):
 
     @staticmethod
     def _dump_files(archive):
-        for model in apps.get_models():
-            field_names = []
-            for field in model._meta.fields:
-                if isinstance(field, models.FileField):
-                    field_names.append(field.name)
-            if not field_names:
-                return
-            for row in model.objects.all():
-                for field_name in field_names:
-                    field = getattr(row, field_name)
-                    if field:
-                        with field as field:
-                            archive.addfile(field.name, field.size, field)
+        for app_config in apps.get_app_configs():
+            for model in app_config.get_models():
+                field_names = []
+                for field in model._meta.fields:
+                    if isinstance(field, models.FileField):
+                        field_names.append(field.name)
+                if not field_names:
+                    continue
+                for row in model.objects.all():
+                    for field_name in field_names:
+                        field = getattr(row, field_name)
+                        if field:
+                            with field as field:
+                                archive.add(field.name, field.size, field)
 
     # pylint: disable=unused-argument
     def handle(self, *args, **kwargs):

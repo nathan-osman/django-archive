@@ -1,3 +1,4 @@
+from django.core.files.base import ContentFile
 from django.core.management import call_command
 from django.test import TestCase
 
@@ -15,7 +16,11 @@ class ArchiveTestCase(TestCase):
         """
         Create an empty model instance
         """
-        Sample().save()
+        sample = Sample()
+        sample.attachment.save(
+            'sample.txt',
+            ContentFile("sample"),
+        )
 
     def test_archive_tar(self):
         """
