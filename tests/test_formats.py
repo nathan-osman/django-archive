@@ -23,7 +23,8 @@ class FormatsTestCase(TestCase):
     @contextmanager
     def _wrap_in_temp_dir(self):
         with TemporaryDirectory() as directory:
-            yield self.settings(ARCHIVE_DIRECTORY=directory)
+            with self.settings(ARCHIVE_DIRECTORY=directory):
+                yield None
 
     def test_archive(self):
         """
