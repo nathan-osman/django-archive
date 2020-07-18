@@ -1,6 +1,7 @@
 from json import load
 
 from django.core.files.base import ContentFile
+from django.core.management import call_command
 from django_archive import __version__
 
 from .base import BaseArchiveTestCase
@@ -16,12 +17,14 @@ class ArchiveTestCase(BaseArchiveTestCase):
     _ATTACHMENT_CONTENT = b'sample'
 
     def setUp(self):
+        super().setUp()
         sample = Sample()
         sample.attachment.save(
             self._ATTACHMENT_FILENAME,
             ContentFile(self._ATTACHMENT_CONTENT),
         )
-        super().setUp()
+        call_command('archive')
+        self.open_archive()
 
     def test_data(self):
         """

@@ -3,7 +3,6 @@ from os import path
 from tarfile import TarFile
 from tempfile import TemporaryDirectory
 
-from django.core.management import call_command
 from django.test import TestCase
 from django_archive import archivers
 
@@ -22,7 +21,10 @@ class BaseTestCase(TestCase):
         with ExitStack() as stack:
             self.directory = stack.enter_context(TemporaryDirectory())
             stack.enter_context(
-                self.settings(ARCHIVE_DIRECTORY=self.directory),
+                self.settings(
+                    ARCHIVE_DIRECTORY=self.directory,
+                    MEDIA_ROOT=self.directory,
+                ),
             )
             self.addCleanup(stack.pop_all().close)
 
@@ -38,29 +40,34 @@ class BaseArchiveTestCase(BaseTestCase):
 
     def setUp(self):
         """
-        Initialize the test by creating an archive
+        Initialize the test by initializing settings for creating an archive
+        """
+        super().setUp()
+        stack = ExitStack()
+        stack.enter_context(
+            self.settings(
+                ARCHIVE_FILENAME=self._FILENAME,
+                ARCHIVE_FORMAT=self._FORMAT,
+            ),
+        )
+        self.addCleanup(stack.close)
 
+    def open_archive(self):
+        """
         The archive is available for reading in self.tarfile. To populate the
         database, override this method and call super().setUp() after.
         """
-        super().setUp()
-        with ExitStack() as stack:
-            stack.enter_context(
-                self.settings(
-                    ARCHIVE_FILENAME=self._FILENAME,
-                    ARCHIVE_FORMAT=self._FORMAT,
-                ),
-            )
-            call_command('archive')
-            self.tarfile = stack.enter_context(
-                TarFile.open(
-                    path.join(
-                        self.directory,
-                        '{}.{}'.format(
-                            self._FILENAME,
-                            self._ARCHIVER.get_extension(self._FORMAT),
-                        ),
+        stack = ExitStack()
+        # pylint: disable=attribute-defined-outside-init
+        self.tarfile = stack.enter_context(
+            TarFile.open(
+                path.join(
+                    self.directory,
+                    '{}.{}'.format(
+                        self._FILENAME,
+                        self._ARCHIVER.get_extension(self._FORMAT),
                     ),
                 ),
-            )
-            self.addCleanup(stack.pop_all().close)
+            ),
+        )
+        self.addCleanup(stack.close)
