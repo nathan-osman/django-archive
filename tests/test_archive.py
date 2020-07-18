@@ -41,4 +41,5 @@ class ArchiveTestCase(BaseArchiveTestCase):
         """
         with self.tarfile.extractfile('meta.json') as fileobj:
             data = load(fileobj)
-            self.assertEqual(data['version'], __version__)
+        self.assertEqual(data['version'], __version__)
+        self.assertEqual(data['migrations']['sample'], '0001_initial')
