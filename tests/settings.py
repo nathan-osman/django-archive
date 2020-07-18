@@ -1,6 +1,3 @@
-import os
-
-
 SECRET_KEY = 'TEST'
 
 INSTALLED_APPS = (
