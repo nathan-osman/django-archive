@@ -35,8 +35,8 @@ class BaseArchiveTestCase(BaseTestCase):
     """
 
     _FILENAME = 'test'
-    _FORMAT = archivers.TARBALL
-    _ARCHIVER = archivers.get_archiver(_FORMAT)
+    _FORMAT_ID = archivers.TARBALL
+    _FORMAT = archivers.registry.get(_FORMAT_ID)
 
     def setUp(self):
         """
@@ -47,7 +47,7 @@ class BaseArchiveTestCase(BaseTestCase):
         stack.enter_context(
             self.settings(
                 ARCHIVE_FILENAME=self._FILENAME,
-                ARCHIVE_FORMAT=self._FORMAT,
+                ARCHIVE_FORMAT=self._FORMAT_ID,
             ),
         )
         self.addCleanup(stack.close)
@@ -65,7 +65,7 @@ class BaseArchiveTestCase(BaseTestCase):
                     self.directory,
                     '{}.{}'.format(
                         self._FILENAME,
-                        self._ARCHIVER.get_extension(self._FORMAT),
+                        self._FORMAT.extensions[0],
                     ),
                 ),
             ),

@@ -33,7 +33,7 @@ class Command(BaseCommand):
     )
 
     @staticmethod
-    def _get_filename(archiver, fmt):
+    def _get_filename(fmt):
         return path.join(
             getattr(settings, 'ARCHIVE_DIRECTORY', ''),
             "{}.{}".format(
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                         '%Y-%m-%d--%H-%M-%S',
                     ),
                 ),
-                archiver.get_extension(fmt),
+                fmt.extensions[0],
             ),
         )
 
@@ -111,11 +111,11 @@ class Command(BaseCommand):
         """
         Process the command
         """
-        fmt = getattr(settings, 'ARCHIVE_FORMAT', TARBALL_BZ2)
-        archiver = registry.get(fmt)
-        filename = Command._get_filename(archiver, fmt)
+        fmt_id = getattr(settings, 'ARCHIVE_FORMAT', TARBALL_BZ2)
+        fmt = registry.get(fmt_id)
+        filename = Command._get_filename(fmt)
         with open(filename, 'wb') as fileobj:
-            archive = archiver(fileobj, fmt)
+            archive = fmt.archiver(fileobj, fmt_id)
             with archive:
                 Command._dump_meta(archive)
                 Command._dump_db(archive)
