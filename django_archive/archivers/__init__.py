@@ -16,6 +16,14 @@ FORMATS = (
     ZIP,
 )
 
+FORMATS_ARCHIVER = {
+    TARBALL: TarballArchiver,
+    TARBALL_GZ: TarballArchiver,
+    TARBALL_BZ2: TarballArchiver,
+    TARBALL_XZ: TarballArchiver,
+    ZIP: ZipArchiver,
+}
+
 FORMATS_DESC = {
     TARBALL: "Tarball (.tar)",
     TARBALL_GZ: "gzip-compressed Tarball (.tar.gz)",
@@ -28,9 +36,13 @@ FORMATS_DESC = {
 def get_archiver(fmt):
     """
     Return the class corresponding with the provided archival format
+    (this method is deprecated in favor of FORMATS_ARCHIVER)
     """
-    if fmt in (TARBALL, TARBALL_GZ, TARBALL_BZ2, TARBALL_XZ):
-        return TarballArchiver
-    if fmt == ZIP:
-        return ZipArchiver
-    raise KeyError("Invalid format '{}' specified".format(fmt))
+    # pylint: disable=import-outside-toplevel
+    from warnings import warn
+    warn(
+        "get_archiver() is deprecated; use FORMATS_ARCHIVER instead",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return FORMATS_ARCHIVER[fmt]
