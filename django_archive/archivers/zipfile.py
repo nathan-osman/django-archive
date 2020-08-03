@@ -1,18 +1,14 @@
 from zipfile import ZipFile
 
+from .registry import registry
+
 
 class ZipArchiver:
     """
     Archiver for creating ZIP files
     """
 
-    # pylint: disable=unused-argument
-    @staticmethod
-    def get_extension(fmt):
-        """
-        Determine the correct file extension (always .zip)
-        """
-        return 'zip'
+    ZIP = 'zip'
 
     # pylint: disable=unused-argument
     def __init__(self, fileobj, fmt):
@@ -40,3 +36,11 @@ class ZipArchiver:
                 chunk_size = min(65536, bytes_remaining)
                 cfile.write(fileobj.read(chunk_size))
                 bytes_remaining -= chunk_size
+
+
+registry.add(
+    ZipArchiver.ZIP,
+    ZipArchiver,
+    "ZIP archive (.zip)",
+    ('zip',),
+)

@@ -1,5 +1,7 @@
 from tarfile import TarInfo, TarFile
 
+from .registry import registry
+
 
 class TarballArchiver:
     """
@@ -10,13 +12,6 @@ class TarballArchiver:
     GZ = 'gz'
     BZ2 = 'bz2'
     XZ = 'xz'
-
-    @classmethod
-    def get_extension(cls, fmt):
-        """
-        Determine the correct file extension for the archive
-        """
-        return fmt if fmt == cls.UNCOMPRESSED else 'tar.{}'.format(fmt)
 
     def __init__(self, fileobj, fmt):
         self._fileobj = fileobj
@@ -39,3 +34,32 @@ class TarballArchiver:
         tarinfo = TarInfo(filename)
         tarinfo.size = size
         self._tarfile.addfile(tarinfo, fileobj)
+
+
+registry.add(
+    TarballArchiver.UNCOMPRESSED,
+    TarballArchiver,
+    "Tarball (.tar)",
+    ('tar',),
+)
+
+registry.add(
+    TarballArchiver.GZ,
+    TarballArchiver,
+    "gzip-compressed Tarball (.tar.gz)",
+    ('tar.gz', 'tgz'),
+)
+
+registry.add(
+    TarballArchiver.BZ2,
+    TarballArchiver,
+    "bzip2-compressed Tarball (.tar.bz2)",
+    ('tar.bz2', 'tbz2'),
+)
+
+registry.add(
+    TarballArchiver.XZ,
+    TarballArchiver,
+    "xz-compressed Tarball (.tar.xz)",
+    ('tar.xz', 'txz'),
+)

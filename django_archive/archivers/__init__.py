@@ -7,7 +7,7 @@ TARBALL = TarballArchiver.UNCOMPRESSED
 TARBALL_GZ = TarballArchiver.GZ
 TARBALL_BZ2 = TarballArchiver.BZ2
 TARBALL_XZ = TarballArchiver.XZ
-ZIP = 'zip'
+ZIP = ZipArchiver.ZIP
 
 
 def get_archiver(fmt):
