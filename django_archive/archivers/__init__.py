@@ -9,12 +9,20 @@ TARBALL_XZ = TarballArchiver.XZ
 ZIP = 'zip'
 
 FORMATS = (
-    (TARBALL, "Tarball (.tar)"),
-    (TARBALL_GZ, "gzip-compressed Tarball (.tar.gz)"),
-    (TARBALL_BZ2, "bzip2-compressed Tarball (.tar.bz2)"),
-    (TARBALL_XZ, "xz-compressed Tarball (.tar.xz)"),
-    (ZIP, "ZIP archive (.zip)"),
+    TARBALL,
+    TARBALL_GZ,
+    TARBALL_BZ2,
+    TARBALL_XZ,
+    ZIP,
 )
+
+FORMATS_DESC = {
+    TARBALL: "Tarball (.tar)",
+    TARBALL_GZ: "gzip-compressed Tarball (.tar.gz)",
+    TARBALL_BZ2: "bzip2-compressed Tarball (.tar.bz2)",
+    TARBALL_XZ: "xz-compressed Tarball (.tar.xz)",
+    ZIP: "ZIP archive (.zip)",
+}
 
 
 def get_archiver(fmt):
