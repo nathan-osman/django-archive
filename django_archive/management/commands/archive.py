@@ -15,7 +15,7 @@ from django.db import connection, models
 from django.db.migrations.recorder import MigrationRecorder
 
 from ... import __version__
-from ...archivers import FORMATS_ARCHIVER, TARBALL_BZ2
+from ...archivers import registry, TARBALL_BZ2
 from ...util.file import MixedModeTemporaryFile
 
 
@@ -112,7 +112,7 @@ class Command(BaseCommand):
         Process the command
         """
         fmt = getattr(settings, 'ARCHIVE_FORMAT', TARBALL_BZ2)
-        archiver = FORMATS_ARCHIVER[fmt]
+        archiver = registry.get(fmt)
         filename = Command._get_filename(archiver, fmt)
         with open(filename, 'wb') as fileobj:
             archive = archiver(fileobj, fmt)
